@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Special Love Story 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --pink: #ff85a1;
+            --dark-pink: #ff4d6d;
+            --bg: #fff0f3;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Flying Emojis */
+        .emoji {
+            position: absolute;
+            font-size: 25px;
+            animation: fly 4s linear infinite;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        @keyframes fly {
+            0% { transform: translateY(110vh) translateX(0); }
+            100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 35px;
+            box-shadow: 0 20px 50px rgba(255, 77, 109, 0.3);
+            text-align: center;
+            width: 360px;
+            min-height: 500px;
+            position: relative;
+            z-index: 10;
+            border: 4px solid var(--pink);
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: #ffe0e6;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, var(--pink), var(--dark-pink));
+            transition: 0.5s;
+        }
+
+        h1 {
+            color: var(--dark-pink);
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            margin: 15px 0;
+        }
+
+        .gif-container {
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gif-container img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 20px;
+        }
+
+        .btn-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            min-height: 60px;
+            position: relative;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #yesBtn { background: var(--dark-pink); color: white; box-shadow: 0 8px 15px rgba(255, 77, 109, 0.4); }
+        #noBtn { background: #e0e0e0; color: #666; position: relative; }
+
+        /* Final Gift Styling */
+        .final-screen { display: none; }
+        .flower-gif { width: 250px; margin-bottom: 20px; animation: heartBeat 1.5s infinite; }
+        
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .typewriter-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 22px;
+            color: var(--dark-pink);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="progress-bar-container">
+            <div id="progress"></div>
+        </div>
+
+        <div id="quiz">
+            <div class="gif-container">
+                <img id="main-gif" src="https://media.tenor.com/9iS7f9XqS_AAAAAj/gift-box.gif" alt="gift">
+            </div>
+            <h1 id="question">Hey Love! Open your surprise? 🎁</h1>
+            <div class="btn-wrapper">
+                <button id="yesBtn" onclick="nextStep()">Yes! ✨</button>
+                <button id="noBtn" onmouseover="teleportNo()">No</button>
+            </div>
+        </div>
+
+        <div id="final" class="final-screen">
+            <img class="flower-gif" src="https://media.tenor.com/X_S_L_24S_AAAAAj/love-you-flowers.gif" alt="Flower Bucket">
+            <div class="typewriter-text" id="typewriter"></div>
+            <h1 style="margin-top: 20px;">💋 Hugs & Kisses! 💋</h1>
+        </div>
+    </div>
+
+    <script>
+        let step = 0;
+        const totalSteps = 7;
+        const emojis = ['❤️', '💖', '💋', '😘', '🤗', '🌹'];
+
+        const questions = [
+            "Are you ready for the cutest quiz ever? 🥺",
+            "Do you promise to never let me go? 🤝",
+            "Can I have all your hugs? (Virtual ones for now) 🤗",
+            "Do you think we are the perfect match? 👩‍❤️‍👨",
+            "Will you be my Valentine forever? 🌹",
+            "Do you love me more than your sleep? 😴",
+            "Final Question: Are you mine for life? 🥰"
+        ];
+
+        const gifs = [
+            "https://media.tenor.com/p097m_V7W9oAAAAj/milk-and-mocha-bear.gif",
+            "https://media.tenor.com/Z86S9A8S67AAAAAj/cute-bear.gif",
+            "https://media.tenor.com/2Y_uAcl6Y3AAAAAj/hug-love.gif",
+            "https://media.tenor.com/v8p77v_mYmMAAAAj/love-cat.gif",
+            "https://media.tenor.com/0vM0639_isgAAAAj/tkthao219-bubududu.gif",
+            "https://media.tenor.com/L8m2JNqVpT9Z6/giphy.gif",
+            "https://media.tenor.com/gO_S_X66X8AAAAAj/love-you.gif"
+        ];
+
+        // Background Emojis
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.classList.add('emoji');
+            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * 100 + "vw";
+            emoji.style.animationDuration = (Math.random() * 2 + 3) + "s";
+            document.body.appendChild(emoji);
+            setTimeout(() => emoji.remove(), 4000);
+        }
+        setInterval(createEmoji, 300);
+
+        // No Button Teleportation
+        function teleportNo() {
+            const noBtn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        function nextStep() {
+            if (step > 0) {
+                // Celebration effect on every click
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ff85a1'] });
+            }
+
+            if (step < totalSteps) {
+                document.getElementById('main-gif').src = gifs[step];
+                document.getElementById('question').innerText = questions[step];
+                document.getElementById('yesBtn').innerText = "YES! ❤️";
+                document.getElementById('noBtn').style.display = 'block';
+                document.getElementById('progress').style.width = ((step + 1) / totalSteps * 100) + "%";
+                step++;
+            } else {
+                showFinal();
+            }
+        }
+
+        function showFinal() {
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('final').style.display = 'block';
+            document.getElementById('progress').style.width = "100%";
+            
+            // Mega Confetti
+            var end = Date.now() + (5 * 1000);
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff4d6d'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff85a1'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+
+            let text = "I KNEW IT! You're officially mine forever! ❤️ This virtual flower bucket is just a start. I promise to keep your life full of smiles, hugs, and unlimited love. You are my world! 🌎✨";
+            let i = 0;
+            function typeWriter() {
+                if (i < text.length) {
+                    document.getElementById('typewriter').innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 40);
+                }
+            }
+            typeWriter();
+        }
+    </script>
+</body>
+</html>
